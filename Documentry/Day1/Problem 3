@@ -1,0 +1,27 @@
+#include <iostream>
+using namespace std;
+
+int main() {
+    // Personal details
+    string name = "Pratul kumar";
+    string uid = "22BCS10065";
+    string section = "630";
+    string areaOfInterest = "nothing";
+    int age = 20; 
+    float lastYearCgpa = 6.5; 
+    string dob = "13/12/2004"; 
+    string hometown = "Motihari";
+
+    // Printing biodata
+    cout << "Academic Biodata:" << endl;
+    cout << "Name: " << name << endl;
+    cout << "UID: " << uid << endl;
+    cout << "Section: " << section << endl;
+    cout << "Area of Interest: " << areaOfInterest << endl;
+    cout << "Age: " << age << endl;
+    cout << "Last Year CGPA: " << lastYearCgpa << endl;
+    cout << "Date of Birth: " << dob << endl;
+    cout << "Hometown: " << hometown << endl;
+
+    return 0;
+}
