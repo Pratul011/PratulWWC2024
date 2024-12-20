@@ -1,1 +1,41 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Function to remove duplicates in-place and return the number of unique elements
+int removeDuplicates(vector<int>& nums) {
+    if (nums.empty()) return 0; // Handle the case where the array is empty
+    
+    int k = 1; // Initialize k to 1 since the first element is always unique
+    
+    // Iterate over the array starting from the second element
+    for (int i = 1; i < nums.size(); ++i) {
+        if (nums[i] != nums[i - 1]) { // Check if the current element is different from the previous one
+            nums[k] = nums[i]; // Place the unique element at the k-th position
+            ++k; // Move the pointer for unique elements
+        }
+    }
+    
+    return k; // k will be the number of unique elements
+}
+
+int main() {
+    // Initialize a sorted array with duplicates
+    vector<int> nums = {1, 1, 2, 2, 3, 3, 4};
+    
+    // Call the function to remove duplicates
+    int length = removeDuplicates(nums);
+    
+    // Output the number of unique elements
+    cout << "Number of unique elements: " << length << endl;
+    
+    // Output the modified array
+    cout << "Modified array: ";
+    for (int i = 0; i < length; ++i) {
+        cout << nums[i] << " ";
+    }
+    cout << endl;
+    
+    return 0;
+}
 
