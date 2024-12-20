@@ -1,1 +1,58 @@
+#include <iostream>
+using namespace std;
+
+// Definition for a binary tree node
+struct TreeNode {
+    int val;
+    TreeNode* left;
+    TreeNode* right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
+// Function to convert sorted array to BST
+TreeNode* sortedArrayToBST(int nums[], int left, int right) {
+    if (left > right) return nullptr;
+    
+    // Find middle element
+    int mid = left + (right - left) / 2;
+    
+    // Create the root node with the middle element
+    TreeNode* node = new TreeNode(nums[mid]);
+    
+    // Recursively build the left and right subtrees
+    node->left = sortedArrayToBST(nums, left, mid - 1);
+    node->right = sortedArrayToBST(nums, mid + 1, right);
+    
+    return node;
+}
+
+// Wrapper function to simplify usage
+TreeNode* sortedArrayToBST(int nums[], int size) {
+    return sortedArrayToBST(nums, 0, size - 1);
+}
+
+// Helper function for in-order traversal (to check the result)
+void inorder(TreeNode* root) {
+    if (root) {
+        inorder(root->left);
+        cout << root->val << " ";
+        inorder(root->right);
+    }
+}
+
+int main() {
+    // Example sorted array
+    int nums[] = {-10, -3, 0, 5, 9};
+    int size = sizeof(nums) / sizeof(nums[0]);
+    
+    // Convert sorted array to BST
+    TreeNode* root = sortedArrayToBST(nums, size);
+    
+    // Print in-order traversal (should be the same as the input array)
+    cout << "In-order Traversal: ";
+    inorder(root);
+    cout << endl;
+
+    return 0;
+}
 
