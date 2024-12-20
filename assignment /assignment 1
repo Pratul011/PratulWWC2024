@@ -1,3 +1,21 @@
+Requirements for Warehouse Inventory Management System
+Add Items:
+Input: Item ID, Name, Category, Quantity, and Reorder Level.
+Functionality: Add an item to the inventory list.
+
+Update Stock:
+Input: Item ID and new Quantity.
+Functionality: Update the stock quantity of an existing item.
+
+Search Item:
+Input: Name or Category.
+Functionality: Find and display items that match the search term.
+
+Exit:
+Functionality: Exit the program.
+
+#code
+
 #include <iostream>
 #include <vector>
 #include <fstream>
@@ -149,7 +167,7 @@ int main() {
             inventory.exportInventory();
             break;
         case 6:
-            cout << "Exiting system. Goodbye!\n";
+            cout << "thanks.\n";
             break;
         default:
             cout << "Invalid choice. Please try again.\n";
@@ -158,4 +176,97 @@ int main() {
 
     return 0;
 }
+
+
+input of eack operation:-
+1. Add Item
+Input:
+Item ID: 101
+Name: Widget
+Category: Tools
+Quantity: 50
+Reorder Level: 20
+2. Update Stock
+Input:
+Item ID: 101
+New Quantity: 10
+3. View Inventory
+Input: None.
+4. Search Item
+Input:
+Name or Category: Tools
+5. Export Inventory
+Input: None.
+
+output:-
+
+Warehouse Inventory Management System
+1. Add Item
+2. Update Stock
+3. View Inventory
+4. Search Item
+5. Export Inventory
+6. Exit
+Enter your choice: 1
+Enter Item ID: 10
+Enter Item Name: A
+Enter Category: Z
+Enter Quantity: 5
+Enter Reorder Level: 3
+Item added successfully.
+
+Warehouse Inventory Management System
+1. Add Item
+2. Update Stock
+3. View Inventory
+4. Search Item
+5. Export Inventory
+6. Exit
+Enter your choice: 2
+Enter Item ID to update: 2
+Item not found.
+
+Warehouse Inventory Management System   
+1. Add Item
+2. Update Stock
+3. View Inventory
+4. Search Item
+5. Export Inventory
+6. Exit
+Enter your choice: 3
+ID: 10, Name: A, Category: Z, Quantity: 5, Reorder Level: 3
+
+Warehouse Inventory Management System   
+1. Add Item
+2. Update Stock
+3. View Inventory
+4. Search Item
+5. Export Inventory
+6. Exit
+Enter your choice: 4
+Enter name or category to search: A     
+ID: 10, Name: A, Category: Z, Quantity: 5, Reorder Level: 3
+
+Warehouse Inventory Management System   
+1. Add Item
+2. Update Stock
+3. View Inventory
+4. Search Item
+5. Export Inventory
+6. Exit
+Enter your choice: 5
+Inventory exported successfully.        
+
+Warehouse Inventory Management System   
+1. Add Item
+2. Update Stock
+3. View Inventory
+4. Search Item
+5. Export Inventory
+6. Exit
+Enter your choice: 6
+thanks.
+
+
+
 
