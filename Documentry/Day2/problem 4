@@ -1,1 +1,138 @@
+#include <iostream>
+#include <string>
+#include <thread>
+#include <chrono>
+#include <mutex>
+#include <memory>
+using namespace std;
+
+struct Task {
+    int taskID;
+    int priority;
+    int executionTime; // in milliseconds
+    int period; // For periodic tasks, 0 for non-periodic
+    shared_ptr<Task> next;
+
+    Task(int id, int pr, int execTime, int per = 0)
+        : taskID(id), priority(pr), executionTime(execTime), period(per), next(nullptr) {}
+};
+
+class TaskScheduler {
+private:
+    shared_ptr<Task> head;
+    mutex mtx;
+
+public:
+    TaskScheduler() : head(nullptr) {}
+
+    void addTask(int taskID, int priority, int executionTime, int period = 0) {
+        lock_guard<mutex> lock(mtx);
+        auto newTask = make_shared<Task>(taskID, priority, executionTime, period);
+
+        if (!head || head->priority < priority) {
+            newTask->next = head;
+            head = newTask;
+            return;
+        }
+
+        auto current = head;
+        while (current->next && current->next->priority >= priority) {
+            current = current->next;
+        }
+
+        newTask->next = current->next;
+        current->next = newTask;
+    }
+
+    void removeTask(int taskID) {
+        lock_guard<mutex> lock(mtx);
+
+        if (!head) return;
+
+        if (head->taskID == taskID) {
+            if (head->period > 0) {
+                addTask(head->taskID, head->priority, head->executionTime, head->period);
+            }
+            head = head->next;
+            return;
+        }
+
+        auto current = head;
+        while (current->next && current->next->taskID != taskID) {
+            current = current->next;
+        }
+
+        if (current->next) {
+            if (current->next->period > 0) {
+                addTask(current->next->taskID, current->next->priority, current->next->executionTime, current->next->period);
+            }
+            current->next = current->next->next;
+        }
+    }
+
+    void executeTasks() {
+        while (true) {
+            this_thread::sleep_for(chrono::milliseconds(100)); // Simulate time passing
+
+            lock_guard<mutex> lock(mtx);
+
+            if (!head) {
+                cout << "No tasks to execute." << endl;
+                continue;
+            }
+
+            auto currentTask = head;
+            cout << "Executing Task ID: " << currentTask->taskID
+                 << " Priority: " << currentTask->priority
+                 << " Execution Time: " << currentTask->executionTime << "ms" << endl;
+
+            head = head->next;
+
+            this_thread::sleep_for(chrono::milliseconds(currentTask->executionTime));
+
+            if (currentTask->period > 0) {
+                addTask(currentTask->taskID, currentTask->priority, currentTask->executionTime, currentTask->period);
+            }
+        }
+    }
+
+    void printTasks() {
+        lock_guard<mutex> lock(mtx);
+
+        if (!head) {
+            cout << "Task queue is empty." << endl;
+            return;
+        }
+
+        auto current = head;
+        cout << "Current Task Queue: " << endl;
+        while (current) {
+            cout << "[Task ID: " << current->taskID
+                 << ", Priority: " << current->priority
+                 << ", Execution Time: " << current->executionTime << "ms]" << endl;
+            current = current->next;
+        }
+        cout << endl;
+    }
+};
+
+int main() {
+    TaskScheduler scheduler;
+
+    thread schedulerThread([&scheduler]() { scheduler.executeTasks(); });
+
+    scheduler.addTask(1, 5, 300);
+    scheduler.addTask(2, 10, 200);
+    scheduler.addTask(3, 8, 500);
+    scheduler.addTask(4, 10, 200, 1000); // Periodic task
+
+    this_thread::sleep_for(chrono::seconds(2));
+    scheduler.printTasks();
+
+    scheduler.removeTask(2);
+    scheduler.printTasks();
+
+    schedulerThread.join();
+    return 0;
+}
 
