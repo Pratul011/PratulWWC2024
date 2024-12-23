@@ -1,0 +1,40 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Solution {
+public:
+    bool PredictTheWinner(vector<int>& nums) {
+        int n = nums.size();
+        vector<vector<int>> dp(n, vector<int>(n, 0)); // DP table to store results
+
+        // Base case: Single elements
+        for (int i = 0; i < n; ++i) {
+            dp[i][i] = nums[i];
+        }
+
+        // Fill the DP table for subarrays of length 2 to n
+        for (int length = 2; length <= n; ++length) {
+            for (int i = 0; i <= n - length; ++i) {
+                int j = i + length - 1; // End index of the subarray
+                dp[i][j] = max(nums[i] - dp[i + 1][j], nums[j] - dp[i][j - 1]);
+            }
+        }
+
+        // If Player 1's maximum difference is non-negative, they can win or tie
+        return dp[0][n - 1] >= 0;
+    }
+};
+
+int main() {
+    Solution solution;
+    vector<int> nums = {1, 0, 2};
+
+    if (solution.PredictTheWinner(nums)) {
+        cout << "Player 1 can win" << endl;
+    } else {
+        cout << "Player 2 will win" << endl;
+    }
+
+    return 0;
+}
