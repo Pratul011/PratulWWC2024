@@ -1,0 +1,45 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+class Solution {
+public:
+    int minNonZeroProduct(int p) {
+        const int MOD = 1e9 + 7;
+        long long maxNum = (1LL << p) - 1;  // This is 2^p - 1
+        long long result = maxNum;
+
+        // We need to multiply the result by every number in the range [1, 2^p - 1]
+        // but we can optimize the process since bit swaps allow us to create any configuration.
+        // The formula is derived from pairing the largest and smallest numbers and using the modulo operation
+        
+        result = (result * modPow(maxNum - 1, maxNum / 2, MOD)) % MOD;
+
+        return result;
+    }
+
+private:
+    // Function to compute (base^exp) % mod using binary exponentiation
+    long long modPow(long long base, long long exp, long long mod) {
+        long long result = 1;
+        base = base % mod;
+        
+        while (exp > 0) {
+            if (exp % 2 == 1) {
+                result = (result * base) % mod;
+            }
+            exp = exp / 2;
+            base = (base * base) % mod;
+        }
+        
+        return result;
+    }
+};
+
+int main() {
+    Solution solution;
+    int p = 3; // Example input
+    cout << "Minimum non-zero product: " << solution.minNonZeroProduct(p) << endl;
+    return 0;
+}
+
