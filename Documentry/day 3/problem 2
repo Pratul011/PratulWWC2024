@@ -1,0 +1,31 @@
+#include <iostream>
+using namespace std;
+
+class Solution {
+public:
+    int lastRemaining(int n) {
+        int head = 1;      // Start of the sequence
+        int step = 1;      // Step size
+        bool left = true;  // Direction of elimination
+        int remaining = n; // Numbers left to process
+
+        while (remaining > 1) {
+            // Update head if eliminating from left or remaining count is odd
+            if (left || remaining % 2 != 0) {
+                head += step;
+            }
+            // Halve the remaining numbers and double the step size
+            remaining /= 2;
+            step *= 2;
+            left = !left; // Switch direction
+        }
+        return head;
+    }
+};
+
+int main() {
+    Solution solution;
+    int n = 9;
+    cout << "Last remaining number for n = " << n << ": " << solution.lastRemaining(n) << endl;
+    return 0;
+}
