@@ -1,0 +1,24 @@
+#include <iostream>
+using namespace std;
+
+class Solution {
+public:
+    int findTheWinner(int n, int k) {
+        int winner = 0;  // Base case: when there is only one person, they are the winner (0-based index)
+        
+        // Iterate over the circle of size from 2 to n
+        for (int i = 2; i <= n; ++i) {
+            winner = (winner + k) % i;  // Update the winner's position
+        }
+
+        return winner + 1;  // Convert from 0-based to 1-based index
+    }
+};
+
+int main() {
+    Solution solution;
+    int n = 9;  // Number of friends
+    int k = 0;  // Counting step
+    cout << "The winner is: " << solution.findTheWinner(n, k) << endl;
+    return 0;
+}
