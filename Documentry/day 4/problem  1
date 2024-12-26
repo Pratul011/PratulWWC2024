@@ -1,0 +1,89 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <cmath>
+
+// Struct to represent a transaction
+struct Transaction {
+    std::string transaction_id;
+    double amount;
+    int frequency;
+    std::string geographical_location;
+    double suspiciousness_score; // Calculated score
+
+    // Constructor
+    Transaction(std::string id, double amt, int freq, std::string location, double score)
+        : transaction_id(id), amount(amt), frequency(freq), geographical_location(location), suspiciousness_score(score) {}
+};
+
+// Function to calculate suspiciousness score based on amount, frequency, and geographical location risk factor
+// (Example: Geographical risk factor is hardcoded; can be extended to use external risk data)
+double calculateSuspiciousness(double amount, int frequency, const std::string &location) {
+    double location_risk = (location == "high-risk" ? 1.5 : 1.0); // Simple risk multiplier for demonstration
+    return (amount * 0.5 + frequency * 0.3) * location_risk;
+}
+
+// Comparator for sorting transactions by suspiciousness score
+bool compareBySuspiciousness(const Transaction &a, const Transaction &b) {
+    return a.suspiciousness_score > b.suspiciousness_score; // Higher scores first
+}
+
+// Function to perform binary search for a transaction by ID
+int binarySearchTransaction(const std::vector<Transaction> &transactions, const std::string &id) {
+    int left = 0, right = transactions.size() - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (transactions[mid].transaction_id == id)
+            return mid;
+        else if (transactions[mid].transaction_id < id)
+            left = mid + 1;
+        else
+            right = mid - 1;
+    }
+    return -1; // Not found
+}
+
+int main() {
+    // Sample transaction data
+    std::vector<Transaction> transactions = {
+        Transaction("TXN001", 5000.0, 10, "low-risk", 0.0),
+        Transaction("TXN002", 12000.0, 20, "high-risk", 0.0),
+        Transaction("TXN003", 8000.0, 15, "low-risk", 0.0),
+        Transaction("TXN004", 2000.0, 5, "high-risk", 0.0),
+        Transaction("TXN005", 7000.0, 8, "low-risk", 0.0)
+    };
+
+    // Calculate suspiciousness scores for all transactions
+    for (auto &transaction : transactions) {
+        transaction.suspiciousness_score = calculateSuspiciousness(transaction.amount, transaction.frequency, transaction.geographical_location);
+    }
+
+    // Sort transactions by suspiciousness score
+    std::sort(transactions.begin(), transactions.end(), compareBySuspiciousness);
+
+    std::cout << "Transactions sorted by suspiciousness score:\n";
+    for (const auto &transaction : transactions) {
+        std::cout << "ID: " << transaction.transaction_id
+                  << ", Amount: " << transaction.amount
+                  << ", Frequency: " << transaction.frequency
+                  << ", Location: " << transaction.geographical_location
+                  << ", Score: " << transaction.suspiciousness_score << "\n";
+    }
+
+    // Search for a specific transaction by ID
+    std::string search_id = "TXN003";
+    int index = binarySearchTransaction(transactions, search_id);
+    if (index != -1) {
+        std::cout << "\nTransaction found:\n"
+                  << "ID: " << transactions[index].transaction_id
+                  << ", Amount: " << transactions[index].amount
+                  << ", Frequency: " << transactions[index].frequency
+                  << ", Location: " << transactions[index].geographical_location
+                  << ", Score: " << transactions[index].suspiciousness_score << "\n";
+    } else {
+        std::cout << "\nTransaction with ID " << search_id << " not found.\n";
+    }
+
+    return 0;
+}
