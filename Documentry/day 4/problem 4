@@ -1,0 +1,57 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <queue>
+#include <tuple>
+
+// Struct to represent a patient
+struct Patient {
+    std::string name;
+    int triage_priority; // Higher value indicates higher priority
+    int severity;        // Higher value indicates more severe condition
+    std::string arrival_time; // In HH:MM format
+
+    // Constructor
+    Patient(std::string n, int tp, int sev, std::string at)
+        : name(n), triage_priority(tp), severity(sev), arrival_time(at) {}
+};
+
+// Comparator for sorting patients
+struct PatientComparator {
+    bool operator()(const Patient &a, const Patient &b) {
+        // Sort by triage_priority (descending), then severity (descending), then arrival_time (ascending)
+        if (a.triage_priority != b.triage_priority)
+            return a.triage_priority < b.triage_priority;
+        if (a.severity != b.severity)
+            return a.severity < b.severity;
+        return a.arrival_time > b.arrival_time;
+    }
+};
+
+int main() {
+    // Priority queue to dynamically manage patients
+    std::priority_queue<Patient, std::vector<Patient>, PatientComparator> patient_queue;
+
+    // Sample patient data
+    patient_queue.push(Patient("Alice", 5, 8, "10:00"));
+    patient_queue.push(Patient("Bob", 4, 9, "10:05"));
+    patient_queue.push(Patient("Charlie", 6, 7, "10:10"));
+    patient_queue.push(Patient("Diana", 5, 9, "10:02"));
+
+    // Dynamically add a new patient
+    patient_queue.push(Patient("Eve", 7, 10, "10:15"));
+
+    // Process patients based on priority
+    std::cout << "Processing patients in order of priority:\n";
+    while (!patient_queue.empty()) {
+        Patient p = patient_queue.top();
+        patient_queue.pop();
+
+        std::cout << "Name: " << p.name
+                  << ", Triage Priority: " << p.triage_priority
+                  << ", Severity: " << p.severity
+                  << ", Arrival Time: " << p.arrival_time << "\n";
+    }
+
+    return 0;
+}
