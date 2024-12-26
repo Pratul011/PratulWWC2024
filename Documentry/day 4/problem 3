@@ -1,0 +1,80 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+#include <map>
+#include <cmath>
+
+// Struct to represent a catalog item
+struct CatalogItem {
+    std::string title;
+    int total_views;
+    double user_rating;
+    int release_year;
+    double relevance_score; // For personalized recommendations
+
+    // Constructor
+    CatalogItem(std::string t, int views, double rating, int year, double relevance)
+        : title(t), total_views(views), user_rating(rating), release_year(year), relevance_score(relevance) {}
+};
+
+// Comparator for sorting by popularity (combined score of views and ratings)
+bool compareByPopularity(const CatalogItem &a, const CatalogItem &b) {
+    double a_popularity = a.total_views * 0.7 + a.user_rating * 30;
+    double b_popularity = b.total_views * 0.7 + b.user_rating * 30;
+    return a_popularity > b_popularity;
+}
+
+// Comparator for sorting by recency (release year)
+bool compareByRecency(const CatalogItem &a, const CatalogItem &b) {
+    return a.release_year > b.release_year;
+}
+
+// Comparator for personalized recommendations (relevance score)
+bool compareByRelevance(const CatalogItem &a, const CatalogItem &b) {
+    return a.relevance_score > b.relevance_score;
+}
+
+int main() {
+    // Sample catalog data
+    std::vector<CatalogItem> catalog = {
+        CatalogItem("Movie A", 100000, 4.5, 2022, 0.9),
+        CatalogItem("Show B", 200000, 4.8, 2021, 0.85),
+        CatalogItem("Movie C", 150000, 4.2, 2023, 0.95),
+        CatalogItem("Show D", 50000, 4.0, 2020, 0.75),
+        CatalogItem("Movie E", 120000, 4.6, 2023, 0.92)
+    };
+
+    // Sort catalog by popularity
+    std::sort(catalog.begin(), catalog.end(), compareByPopularity);
+    std::cout << "Catalog sorted by popularity:\n";
+    for (const auto &item : catalog) {
+        std::cout << "Title: " << item.title
+                  << ", Views: " << item.total_views
+                  << ", Rating: " << item.user_rating
+                  << ", Release Year: " << item.release_year << "\n";
+    }
+
+    // Sort catalog by recency
+    std::sort(catalog.begin(), catalog.end(), compareByRecency);
+    std::cout << "\nCatalog sorted by recency:\n";
+    for (const auto &item : catalog) {
+        std::cout << "Title: " << item.title
+                  << ", Views: " << item.total_views
+                  << ", Rating: " << item.user_rating
+                  << ", Release Year: " << item.release_year << "\n";
+    }
+
+    // Sort catalog by relevance for personalized recommendations
+    std::sort(catalog.begin(), catalog.end(), compareByRelevance);
+    std::cout << "\nCatalog sorted by relevance:\n";
+    for (const auto &item : catalog) {
+        std::cout << "Title: " << item.title
+                  << ", Views: " << item.total_views
+                  << ", Rating: " << item.user_rating
+                  << ", Release Year: " << item.release_year
+                  << ", Relevance Score: " << item.relevance_score << "\n";
+    }
+
+    return 0;
+}
