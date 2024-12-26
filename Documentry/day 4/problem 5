@@ -1,0 +1,56 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <queue>
+
+// Struct to represent an advertisement
+struct Advertisement {
+    std::string advertiser_name;
+    double bid_amount;        // Higher bid amount increases priority
+    double engagement_rate;   // Higher engagement rate increases priority
+    double remaining_budget;  // Ads with higher remaining budgets are prioritized
+
+    // Constructor
+    Advertisement(std::string name, double bid, double engagement, double budget)
+        : advertiser_name(name), bid_amount(bid), engagement_rate(engagement), remaining_budget(budget) {}
+};
+
+// Comparator for prioritizing advertisements
+struct AdComparator {
+    bool operator()(const Advertisement &a, const Advertisement &b) {
+        // Prioritize by bid_amount (descending), engagement_rate (descending), remaining_budget (descending)
+        if (a.bid_amount != b.bid_amount)
+            return a.bid_amount < b.bid_amount;
+        if (a.engagement_rate != b.engagement_rate)
+            return a.engagement_rate < b.engagement_rate;
+        return a.remaining_budget < b.remaining_budget;
+    }
+};
+
+int main() {
+    // Priority queue to manage advertisements
+    std::priority_queue<Advertisement, std::vector<Advertisement>, AdComparator> ad_queue;
+
+    // Sample advertisement data
+    ad_queue.push(Advertisement("Advertiser A", 5.0, 0.3, 1000.0));
+    ad_queue.push(Advertisement("Advertiser B", 7.0, 0.5, 800.0));
+    ad_queue.push(Advertisement("Advertiser C", 6.0, 0.4, 1200.0));
+    ad_queue.push(Advertisement("Advertiser D", 7.0, 0.3, 900.0));
+
+    // Dynamically add a new advertisement
+    ad_queue.push(Advertisement("Advertiser E", 8.0, 0.6, 1100.0));
+
+    // Schedule advertisements based on priority
+    std::cout << "Scheduled advertisements in priority order:\n";
+    while (!ad_queue.empty()) {
+        Advertisement ad = ad_queue.top();
+        ad_queue.pop();
+
+        std::cout << "Advertiser: " << ad.advertiser_name
+                  << ", Bid Amount: " << ad.bid_amount
+                  << ", Engagement Rate: " << ad.engagement_rate
+                  << ", Remaining Budget: " << ad.remaining_budget << "\n";
+    }
+
+    return 0;
+}
